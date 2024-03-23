@@ -11,3 +11,4 @@ streamlit_card
 psycopg2
 label-studio
 Jetson.GPIO
+bottle
