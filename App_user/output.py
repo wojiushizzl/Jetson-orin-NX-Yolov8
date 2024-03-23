@@ -5,8 +5,8 @@ import subprocess
 
 
 RelayA=[21,20,26]
-GPIO.setmodel(GPIO.BCM)
-GPIO.setwarning(False)
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 GPIO.setup(RelayA, GPIO.OUT, initial=GPIO.HIGH)
 
 

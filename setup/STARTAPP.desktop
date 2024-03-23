@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=START_WEBAPP
-Exec=bash /home/zzl/Downloads/Jetson-orin-NX-env/setup/start.sh
+Exec=bash /home/zzl/Downloads/Jetson-orin-NX-Yolov8/setup/start.sh
 Type=Application
 Terminal=true
 StartupNotify=true
-Icon=/home/zzl/Downloads/Jetson-orin-NX-env/setup/logo.png
+Icon=/home/zzl/Downloads/Jetson-orin-NX-Yolov8/setup/logo.png
