@@ -6,7 +6,8 @@ from PIL import Image
 import streamlit as st
 import config
 from utils import *
-
+from logic_check import LOGIC
+from output import OUTPUT
 # setting page layout
 st.set_page_config(
     page_title="FAHAI",
@@ -56,12 +57,11 @@ def source_switch():
     return source_selectbox
 
 
-def target_select(classes_list=['large','small']):
+def target_select(classes_list):
     '''
       find the classes from the project , output classes selected list 
       target_list:list[int]
     '''
-    # classes_list=['large','small']
     target_list=st.multiselect("Target",classes_list,default=[classes_list[0]])
     target_list_index=[]
     for t in target_list:
@@ -71,20 +71,12 @@ def target_select(classes_list=['large','small']):
 
 def logic_select():
     ### select the logic  ###
-    logic=st.selectbox("Logic",[
-        "L10 flange",
-        "HS Pachage",
-        "HS Rolling"
-        ],index=0)
+    logic=st.selectbox("Logic",LOGIC,index=0)
     return logic
 
 def output_select():
     ### select the output ###
-    output_list=st.multiselect("Output",[
-        'Alarm',
-        'Rs485',
-        'Stop',
-        ],default=['Alarm'])
+    output_list=st.multiselect("Output",OUTPUT,default=['Alarm'])
     reaction_speed=int(st.slider(
         "Select Reaction Speed", 10, 100, 30)) 
     return output_list,reaction_speed

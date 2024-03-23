@@ -18,8 +18,9 @@ import numpy as np
 import threading
 import subprocess
 from ultralytics.nn.autobackend import check_class_names
-import torch
-import yaml
+from logic_check import logic_check
+from output import output
+
 def _display_detected_frames(conf, model, st_frame, image):
     """
     Display the detected objects on a video frame using the YOLOv8 model.
@@ -181,22 +182,7 @@ def infer_uploaded_webcam_det(conf, model,target_list,logic,output_list,reaction
     :return: None
     """
     st.write(str(target_list)+logic+str(output_list))
-    def play_audio():
-        alarm_script_path="alarm_run.py"
-        subprocess.Popen(["python",alarm_script_path])
-
-    def Rs485():
-        print("Rs485")
-
-    def Stop():
-        print("Stop")
-        
-    def check(logic,boxes):
-        num=len(list(boxes.cls))
-        result=True if num >0 else False
-        return result
-
-
+    
     lock=threading.Lock()
     frame_num=reaction_speed
     zzl=[0]*frame_num
@@ -211,7 +197,8 @@ def infer_uploaded_webcam_det(conf, model,target_list,logic,output_list,reaction
         # Predict the objects in the image using YOLOv8 model
         res = model.predict(image, conf=conf,classes=target_list,vid_stride=5)
         boxes = res[0].boxes
-        if check(logic,boxes):
+        check=logic_check(logic,boxes)
+        if check:
             result = "NOK"
             color=[0, 0, 255]
         else:
@@ -223,7 +210,7 @@ def infer_uploaded_webcam_det(conf, model,target_list,logic,output_list,reaction
         puttext(result,res_plotted,color)
 
         with lock:
-            if check(logic,boxes)>0:
+            if check:
                 zzl.append(1)
             else:
                 zzl.append(0)
@@ -241,14 +228,8 @@ def infer_uploaded_webcam_det(conf, model,target_list,logic,output_list,reaction
             time.sleep(0.001)
             if x>frame_num*0.8:
                 try:
-                    if 'Alarm' in output_list:
-                        play_audio()
-                    elif 'Rs485' in output_list:
-                        Rs485()
-                    elif 'Stop' in output_list:
-                        Stop()
-                    else:
-                        play_audio
+                    for o in output_list:
+                        output(o)
                     zzl = [0] * frame_num
                 except:
                     print('error, play alarm failed')
