@@ -1,4 +1,4 @@
-# Jetson-orin-NX-env
+# Jetson-orin-NX-Yolov8
 Run yolov8 in Jetson orin NX
 
 ```bash
