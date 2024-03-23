@@ -183,6 +183,7 @@ $ pip install ruamel.yaml
 $ pip install streamlit-extras
 $ pip install streamlit_card
 $ pip install streamlit-option-menu
+$ pip install Jetson.GPIO
 ```
 
 ## 11. Install VSCode  (optional)
