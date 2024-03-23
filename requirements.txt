@@ -1,0 +1,12 @@
+ultralytics
+streamlit
+streamlit-webrtc
+streamlit-extras
+streamlit-option-menu
+playsound
+hydralit_components
+ruamel.yaml
+streamlit-extras
+streamlit_card
+psycopg2
+label-studio

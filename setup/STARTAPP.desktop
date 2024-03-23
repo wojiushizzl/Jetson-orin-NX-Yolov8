@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=START_WEBAPP
+Exec=bash /home/zzl/Desktop/start.sh
+Type=Application
+Terminal=true
+StartupNotify=true
+Icon=/home/zzl/Desktop/logo.png
