@@ -174,7 +174,7 @@ def puttext(text,res_plotted,color):
 
 
 
-def infer_uploaded_webcam_det(conf, model,target_list,logic,output_list,reaction_speed):
+def infer_uploaded_webcam_det(conf, model,target_list,logic,output_list,reaction_speed,reset_button):
     """
     Execute inference for webcam.
     :param conf: Confidence of YOLOv8 model
@@ -232,7 +232,7 @@ def infer_uploaded_webcam_det(conf, model,target_list,logic,output_list,reaction
                         output(o)
                     zzl = [0] * frame_num
                 except:
-                    print('error, play alarm failed')
+                    print('error, OUTPUT failed')
             else:
                 continue
 

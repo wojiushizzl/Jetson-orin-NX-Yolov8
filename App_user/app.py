@@ -8,6 +8,8 @@ import config
 from utils import *
 from logic_check import LOGIC
 from output import OUTPUT
+import Jetson.GPIO as GPIO
+
 # setting page layout
 st.set_page_config(
     page_title="FAHAI",
@@ -74,12 +76,26 @@ def logic_select():
     logic=st.selectbox("Logic",LOGIC,index=0)
     return logic
 
+
+
 def output_select():
+    RelayA=[21,20,26]
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
+    GPIO.setup(RelayA, GPIO.OUT, initial=GPIO.HIGH)
     ### select the output ###
-    output_list=st.multiselect("Output",OUTPUT,default=['Alarm'])
+    output_list=st.multiselect("Output",OUTPUT,default=OUTPUT[0])
     reaction_speed=int(st.slider(
-        "Select Reaction Speed", 10, 100, 30)) 
-    return output_list,reaction_speed
+        "Select Reaction Speed", 10, 100, 10)) 
+    reset_button=st.button('Reset')
+    if reset_button:
+        try:
+            print("Reset")
+            GPIO.output(RelayA, GPIO.HIGH)
+        except:
+            GPIO.cleanup()
+
+    return output_list,reaction_speed,reset_button
 
 
 # sidebar
@@ -94,7 +110,7 @@ with st.sidebar:
     with st.expander("Logic Select",expanded=False):
         logic=logic_select()
     with st.expander("Output Select",expanded=True):
-        output_list,reaction_speed=output_select()
+        output_list,reaction_speed,reset_button=output_select()
 
 # st.write(classes_list)
 source_img = None
@@ -106,7 +122,7 @@ elif source_selectbox == config.SOURCES_LIST[1]: # Video
     infer_uploaded_video(confidence, model)
 elif source_selectbox == config.SOURCES_LIST[2]: # Webcam
     if task_type== config.TASK_TYPE_LIST[0]:
-        infer_uploaded_webcam_det(confidence, model,target_list,logic,output_list,reaction_speed) # Detection task
+        infer_uploaded_webcam_det(confidence, model,target_list,logic,output_list,reaction_speed,reset_button) # Detection task
 
 
 else:
