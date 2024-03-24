@@ -1,4 +1,5 @@
-from  playsound import playsound
+from playsound import playsound
+
 
 def run():
     playsound("alarm.mp3")

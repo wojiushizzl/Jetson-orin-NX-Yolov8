@@ -1,9 +1,8 @@
-
 import os
 import streamlit as st
 import shutil
 import ruamel.yaml
-from  yolov8_train import train
+from yolov8_train import train
 from streamlit_extras.grid import grid
 
 

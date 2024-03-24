@@ -1,8 +1,6 @@
 from ultralytics import YOLO
 import torch
 
-
-
 print(torch.__version__)
 print(torch.version.cuda)
 print(torch.cuda.is_available())
@@ -11,7 +9,7 @@ print(torch.cuda.is_available())
 model = YOLO('yolov8n.pt')  # pretrained YOLOv8n model
 
 # Run batched inference on a list of images
-results = model(['image1.jpg',])  # return a list of Results objects
+results = model(['image1.jpg', ])  # return a list of Results objects
 
 # Process results list
 for result in results:

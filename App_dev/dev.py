@@ -21,12 +21,17 @@ st.set_page_config(
     layout='wide',
     # initial_sidebar_state='collapsed',
 )
+
+
 def get_all_projects():
     # 获取项目文件夹下的所有文件夹列表
     folder_list = [f.name for f in os.scandir('projects') if f.is_dir()]
     return folder_list
 
+
 yaml = ruamel.yaml.YAML()
+
+
 def create_folder(folder_name):
     try:
         os.mkdir(folder_name)
@@ -35,7 +40,7 @@ def create_folder(folder_name):
 
 
 def create_yaml(project_name):
-    file_name=project_name+'/train.yaml'
+    file_name = project_name + '/train.yaml'
     # 复制文件
     shutil.copyfile("train.yaml", file_name)
 
@@ -43,21 +48,22 @@ def create_yaml(project_name):
     with open(file_name, "r", encoding="utf-8") as file:
         lines = yaml.load(file)
 
-    path=os.path.join(project_name, 'datasets')
+    path = os.path.join(project_name, 'datasets')
     if "path" in lines:
-        lines["path"] =path
+        lines["path"] = path
 
     # 将更改后的内容写回文件
     with open(file_name, "w", encoding="utf-8") as file:
         yaml.dump(lines, file)
 
+
 def get_all_classes(project_name):
-    classes_txt_path=os.path.join('projects',project_name,'datasets','labels','classes.txt')
+    classes_txt_path = os.path.join('projects', project_name, 'datasets', 'labels', 'classes.txt')
     result_dict = {}
     if os.path.exists(classes_txt_path):
         with open(classes_txt_path, 'r') as file:
             lines = file.readlines()
-            for i,line in enumerate(lines):
+            for i, line in enumerate(lines):
                 result_dict[i] = line.strip()
         return result_dict
     else:
@@ -66,16 +72,16 @@ def get_all_classes(project_name):
 
 def update_yaml(project_name):
     if st.button("更新训练配置文件"):
-        file_name=os.path.join('projects',project_name,'train.yaml')
+        file_name = os.path.join('projects', project_name, 'train.yaml')
 
         # 读取复制的文件并更改其中一行代码
         with open(file_name, "r", encoding="utf-8") as file:
             lines = yaml.load(file)
 
-        classes=get_all_classes(project_name)
-        if classes :
+        classes = get_all_classes(project_name)
+        if classes:
             if "names" in lines:
-                lines["names"] =classes
+                lines["names"] = classes
 
             # 将更改后的内容写回文件
             with open(file_name, "w", encoding="utf-8") as file:
@@ -83,6 +89,7 @@ def update_yaml(project_name):
             st.success('yaml file updated')
         else:
             st.error('分类文件不存在，请先上传classes.txt')
+
 
 def create_project():
     # 创建项目
@@ -109,8 +116,9 @@ def create_project():
         else:
             message_container.warning('请输入项目称。')
 
+
 def delete_project(selected_projects):
-    #删除项目
+    # 删除项目
     if st.button('删除项目'):
         if selected_projects:
             try:
@@ -163,12 +171,12 @@ def sidebar_setting():
         sticky_nav=True,  # at the top or not
         sticky_mode='pinned',  # jumpy or not-jumpy, but sticky or pinned
     )
-    return menu_id,selected_project
-menu_id,selected_project=sidebar_setting()
+    return menu_id, selected_project
+
+
+menu_id, selected_project = sidebar_setting()
 # get the id of the menu item clicked
 # st.info(f"{menu_id}")
-
-
 
 
 if menu_id == 'Home':

@@ -49,6 +49,8 @@ def upload_labels(selected_projects):
             with open(filename, "wb") as f:
                 f.write(uploaded_file.getvalue())
             st.success(f"标签已成功保存到 {filename}。")
+
+
 def upload_classes(selected_projects):
     # 创建一个用于保存标签的文件夹
     target_folder = os.path.join('projects', selected_projects)
@@ -126,7 +128,7 @@ def dataset_info(selected_projects):
 
 
 def datasetPage(selected_projects):
-    my_grid = grid( [4, 6],vertical_align="top")
+    my_grid = grid([4, 6], vertical_align="top")
 
     # Row 2:
     with my_grid.container():
@@ -161,7 +163,7 @@ def datasetPage(selected_projects):
                 padding: calc(1em - 1px)
             }
             """, ):
-            video_grid=grid([9, 1],vertical_align="top")
+            video_grid = grid([9, 1], vertical_align="top")
             with video_grid.container():
                 webrtc_ctx = webrtc_streamer(key="demo", video_frame_callback=video_frame_callback)
 
@@ -185,8 +187,8 @@ def datasetPage(selected_projects):
             }
             """, ):
             sub_grid = grid([2, 2], [8], [1], [1], [1], vertical_align="top")
-            save_button=sub_grid.button("Save", use_container_width=True)
-            reset_button=sub_grid.button("Reset", use_container_width=True)
+            save_button = sub_grid.button("Save", use_container_width=True)
+            reset_button = sub_grid.button("Reset", use_container_width=True)
             if save_button:
                 pil_image.save(save_path)
                 st.session_state.count += 1

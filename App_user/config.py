@@ -10,7 +10,6 @@ from pathlib import Path
 import sys
 import os
 
-
 # Get the absolute path of the current file
 file_path = Path(__file__).resolve()
 
@@ -24,15 +23,14 @@ if root_path not in sys.path:
 # Get the relative path of the root directory with respect to the current working directory
 ROOT = root_path.relative_to(Path.cwd())
 
-
 # Source
 SOURCES_LIST = ["Image", "Video", "Webcam"]
 
-TASK_TYPE_LIST = ["Detection","Classification"]
+TASK_TYPE_LIST = ["Detection", "Classification"]
 
-MODEL_DIR={
-    "Detection":ROOT / 'weight' / 'detection',
-    "Classification":ROOT / 'weight' / 'classification'
+MODEL_DIR = {
+    "Detection": ROOT / 'weight' / 'detection',
+    "Classification": ROOT / 'weight' / 'classification'
 }
 
 if not os.path.exists(str(MODEL_DIR[TASK_TYPE_LIST[0]])):
@@ -42,9 +40,7 @@ if not os.path.exists(str(MODEL_DIR[TASK_TYPE_LIST[1]])):
 DETECTION_MODEL_LIST = os.listdir(str(MODEL_DIR[TASK_TYPE_LIST[0]]))
 CLS_MODEL_LIST = os.listdir(str(MODEL_DIR[TASK_TYPE_LIST[1]]))
 
-
-MODEL_LIST={
-    "Detection":DETECTION_MODEL_LIST,
-    "Classification":CLS_MODEL_LIST
+MODEL_LIST = {
+    "Detection": DETECTION_MODEL_LIST,
+    "Classification": CLS_MODEL_LIST
 }
-
