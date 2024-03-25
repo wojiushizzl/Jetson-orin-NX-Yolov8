@@ -51,3 +51,6 @@ with open(dt_path, 'w') as f:
 app_dir = '/usr/share/applications'
 
 shutil.copy(dt_path, app_dir)
+
+# modify init yaml path at usr/home/.config/ultralytics
+# to be continue...

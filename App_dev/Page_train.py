@@ -122,7 +122,8 @@ def delete_project(selected_projects):
 def train_project(selected_projects):
     epochs = int(st.number_input('epochs', value=50))
     batch = int(st.number_input('batch', value=2))
-
+    with st.expander("高级设置", expanded=False):
+        st.write("高级设置，")
     if st.button("训练项目"):
         train(selected_projects, epochs, batch)
 
