@@ -47,6 +47,7 @@ def train(
         mixup=mixup,
         copy_paste=copy_paste,
         auto_augment=auto_augment,
+        plots=True,
     )
 
 
