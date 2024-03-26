@@ -120,13 +120,44 @@ def delete_project(selected_projects):
 
 
 def train_project(selected_projects):
-    epochs = int(st.number_input('epochs', value=50))
-    batch = int(st.number_input('batch', value=2))
-    with st.expander("高级设置", expanded=False):
-        st.write("高级设置，")
-    if st.button("训练项目"):
-        train(selected_projects, epochs, batch)
+    train_grid = grid([2, 2],[1],[2,2,2,2],[2,2,2,2],[2,2,2,2],[2,2,2,2],vertical_align="bottom")
+    epochs = int(train_grid.number_input('epochs', value=50,help="训练历元总数。每个历元代表对整个数据集进行一次完整的训练。调整该值会影响训练时间和模型性能。"))
+    batch = int(train_grid.number_input('batch', value=2,help="训练的批量大小，表示在更新模型内部参数之前要处理多少张图像。自动批处理 (batch=-1)会根据 GPU 内存可用性动态调整批处理大小。"))
 
+    train_grid.write("高级设置")
+    exist_ok=train_grid.toggle("exist_ok",help="如果为 True，则允许覆盖现有的项目/名称目录。这对迭代实验非常有用，无需手动清除之前的输出。")
+    single_cls=train_grid.toggle("single_cls",help="在训练过程中将多类数据集中的所有类别视为单一类别。适用于二元分类任务，或侧重于对象的存在而非分类。")
+    patience = int(train_grid.number_input('patience',min_value=10,max_value=epochs, value=20,help="在验证指标没有改善的情况下，提前停止训练所需的历元数。当性能趋于平稳时停止训练，有助于防止过度拟合。"))
+    imgsz = int(train_grid.number_input('imgsz',min_value=480, value=640,help="用于训练的目标图像尺寸。所有图像在输入模型前都会被调整到这一尺寸。影响模型精度和计算复杂度。"))
+    degrees = int(train_grid.slider('degrees',min_value=-180,max_value=180, value=20,help="float -180 - +180  在指定的度数范围内随机旋转图像，提高模型识别不同方向物体的能力。"))
+    translate = int(train_grid.slider('translate',min_value=0.0,max_value=1.0, value=0.1,step=0.1,help="float  0.0 - 1.0	以图像大小的一小部分水平和垂直平移图像，帮助学习检测部分可见的物体。"))
+    scale = int(train_grid.slider('scale',min_value=0.0,max_value=1.0, value=0.5,step=0.1,help=" float 0.0 - 1.0  通过增益因子缩放图像，模拟物体与摄像机的不同距离。"))
+    flipud = int(train_grid.slider('flipud',min_value=0.0,max_value=1.0, value=0.0,step=0.1,help="float  0.0 - 1.0 以指定的概率将图像翻转过来，在不影响物体特征的情况下增加数据的可变性。"))
+    fliplr = int(train_grid.slider('fliplr',min_value=0.0,max_value=1.0, value=0.0,step=0.1,help="float 0.0 - 1.0  以指定的概率将图像从左到右翻转，这对学习对称物体和增加数据集多样性非常有用。"))
+    erasing = int(train_grid.slider('erasing',min_value=0.0,max_value=1.0, value=0.4,step=0.1,help="float 0.0 - 1.0  在分类训练过程中随机擦除部分图像，鼓励模型将识别重点放在不明显的特征上。"))
+    mosaic = int(train_grid.slider('mosaic',min_value=0.0,max_value=1.0, value=1.0,step=0.1,help=" float  0.0 - 1.0将四幅训练图像合成一幅，模拟不同的场景构成和物体互动。对复杂场景的理解非常有效。"))
+    mixup = int(train_grid.slider('mixup',min_value=0.0,max_value=1.0, value=0.0,step=0.1,help="float 0.0 - 1.0  混合两幅图像及其标签，创建合成图像。通过引入标签噪声和视觉变化，增强模型的泛化能力。"))
+    copy_paste = int(train_grid.slider('copy_paste',min_value=0.0,max_value=1.0, value=0.0,step=0.1,help="float 0.0 - 1.0  从一幅图像中复制物体并粘贴到另一幅图像上，用于增加物体实例和学习物体遮挡。"))
+
+
+    if st.button("训练项目"):
+        train(
+            selected_projects,
+            epochs=epochs,
+            batch=batch,
+            exist_ok=exist_ok,
+            single_cls=single_cls,
+            patience=patience,
+            imgsz=imgsz,
+            degrees=degrees,
+            translate=translate,
+            scale=scale,
+            flipud=flipud,
+            fliplr=fliplr,
+            erasing=erasing,
+            mosaic=mosaic,
+            mixup=mixup,
+            copy_paste=copy_paste)
 
 def get_last_updated_folder(folder_path):
     # 获取文件夹下的所有直接子文件夹
