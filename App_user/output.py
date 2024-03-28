@@ -1,7 +1,7 @@
 import Jetson.GPIO as GPIO
 import subprocess
 
-OUTPUT = ['Alarm', 'Rs485', 'Stop']
+OUTPUT = ['Alarm', 'Rs485', 'Stop','Reset']
 
 RelayA = [21, 20, 26]
 GPIO.setmode(GPIO.BCM)
@@ -18,5 +18,10 @@ def output(output_type):
     if OUTPUT.index(output_type) == 2:
         try:
             GPIO.output(RelayA, GPIO.LOW)
+        except:
+            GPIO.cleanup()
+    if OUTPUT.index(output_type) == 3:
+        try:
+            GPIO.output(RelayA, GPIO.HIGH)
         except:
             GPIO.cleanup()
