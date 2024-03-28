@@ -7,7 +7,7 @@ import streamlit as st
 import config
 from utils import *
 from logic_check import LOGIC
-from output import OUTPUT
+from output import OUTPUT,output
 import Jetson.GPIO as GPIO
 
 # setting page layout
@@ -86,17 +86,15 @@ def output_select():
     GPIO.setwarnings(False)
     GPIO.setup(RelayA, GPIO.OUT, initial=GPIO.HIGH)
     ### select the output ###
-    output_list = st.multiselect("Output", OUTPUT, default=OUTPUT[0])
+    output_list = st.multiselect("Output", OUTPUT[:-1], default=OUTPUT[:-1])
     reaction_speed = int(st.slider(
         "Select Reaction Speed", 10, 100, 10))
     reset_button = st.button('Reset')
+    stop_button =st.button('Stop')
     if reset_button:
-        try:
-            print("Reset")
-            GPIO.output(RelayA, GPIO.HIGH)
-        except:
-            GPIO.cleanup()
-
+        output('Reset')
+    if stop_button:
+        output('Stop')
     return output_list, reaction_speed, reset_button
 
 
