@@ -1,8 +1,7 @@
 # Jetson-orin-NX-Yolov8
-Run yolov8 in Jetson orin NX
 
 ```bash
-git clone https://github.com/wojiushizzl/Jetson-orin-NX-env.git
+git clone https://github.com/wojiushizzl/Jetson-orin-NX-Yolov8.git
 ```
 
 ## 1. Install Sunlogin  (optional)
