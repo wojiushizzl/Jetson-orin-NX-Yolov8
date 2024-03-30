@@ -140,21 +140,27 @@ def sidebar_setting():
     projects_list = get_all_projects()
     # 1. as sidebar menu
     with st.sidebar:
-        selected_project = option_menu(
-            "Select Projects",
-            options=projects_list,
-            # icons=['house'],
-            menu_icon="cast",
-            default_index=0
-        )
-    with st.sidebar:
+        try:
+            selected_project = option_menu(
+                "Select Projects",
+                options=projects_list,
+                # icons=['house'],
+                menu_icon="cast",
+                default_index=0
+            )
+        except:
+            selected_project=None
+            st.warning('Create Project first')
         with st.expander("Create Project", expanded=False):
             # 创建项目
             create_project()
         with st.expander("Delete Project", expanded=False):
             # 删除项目
-            st.write(selected_project)
-            delete_project(selected_project)
+            try :
+                st.write(selected_project)
+                delete_project(selected_project)
+            except:
+                st.warning("No project exit")
     menu_data = [
         {'icon': "far fa-copy", 'label': "Datasets"},
         {'icon': "far fa-chart-bar", 'label': "Train"},  # no tooltip message

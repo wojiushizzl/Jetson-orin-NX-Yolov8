@@ -21,13 +21,16 @@ def upload_images(selected_projects):
 
     # 将上传的图片保存到指定文件夹中
     if uploaded_files is not None:
-        for uploaded_file in uploaded_files:
-            # 获取上传文件的文件名
-            filename = os.path.join(target_folder, uploaded_file.name)
-            # 保存文件
-            with open(filename, "wb") as f:
-                f.write(uploaded_file.getvalue())
-            st.success(f"图片已成功保存到 {filename}。")
+        if st.button("Image Upload Confirm"):
+
+            for uploaded_file in uploaded_files:
+                # 获取上传文件的文件名
+                filename = os.path.join(target_folder, uploaded_file.name)
+                # 保存文件
+                with open(filename, "wb") as f:
+                    f.write(uploaded_file.getvalue())
+                st.success(f"图片已成功保存到 {filename}。")
+            st.rerun()
 
 
 def upload_labels(selected_projects):
@@ -42,13 +45,17 @@ def upload_labels(selected_projects):
 
     # 将上传的标签保存到指定文件夹中
     if uploaded_files is not None:
-        for uploaded_file in uploaded_files:
-            # 获取上传文件的文件名
-            filename = os.path.join(target_folder, uploaded_file.name)
-            # 保存文件
-            with open(filename, "wb") as f:
-                f.write(uploaded_file.getvalue())
-            st.success(f"标签已成功保存到 {filename}。")
+        if st.button("Label Upload Confirm"):
+
+            for uploaded_file in uploaded_files:
+                # 获取上传文件的文件名
+                filename = os.path.join(target_folder, uploaded_file.name)
+                # 保存文件
+                with open(filename, "wb") as f:
+                    f.write(uploaded_file.getvalue())
+                st.success(f"标签已成功保存到 {filename}。")
+            st.rerun()
+
 
 
 def upload_classes(selected_projects):
@@ -63,13 +70,16 @@ def upload_classes(selected_projects):
 
     # 将上传的标签保存到指定文件夹中
     if uploaded_files is not None:
-        for uploaded_file in uploaded_files:
-            # 获取上传文件的文件名
-            filename = os.path.join(target_folder, uploaded_file.name)
-            # 保存文件
-            with open(filename, "wb") as f:
-                f.write(uploaded_file.getvalue())
-            st.success(f"标签已成功保存到 {filename}。")
+        if st.button("Classes Upload Confirm"):
+
+            for uploaded_file in uploaded_files:
+                # 获取上传文件的文件名
+                filename = os.path.join(target_folder, uploaded_file.name)
+                # 保存文件
+                with open(filename, "wb") as f:
+                    f.write(uploaded_file.getvalue())
+                st.success(f"标签已成功保存到 {filename}。")
+            st.rerun()
 
 
 def get_all_projects():
@@ -106,6 +116,7 @@ def dataset_info(selected_projects):
         images_files = os.listdir(images_path)
     images_files = [file for file in images_files if os.path.isfile(os.path.join(images_path, file))]
     images_count = len(images_files)
+
     labels_path = os.path.join('projects', selected_projects, 'datasets', 'labels')
     if os.path.exists(labels_path):
         labels_files = os.listdir(labels_path)
@@ -113,7 +124,7 @@ def dataset_info(selected_projects):
         os.makedirs(labels_path)
         labels_files = os.listdir(labels_path)
     labels_files = [file for file in labels_files if os.path.isfile(os.path.join(labels_path, file))]
-    labels_count = len(labels_files) - 1 if len(labels_files) - 1 >= 0 else 0
+    labels_count = len(labels_files) - 1 if 'classes.txt' in labels_files else len(labels_files)
     try:
         classes_path = os.path.join('projects', selected_projects, 'datasets', 'labels', 'classes.txt')
         classes_count = count_lines_in_file(classes_path)
@@ -133,7 +144,7 @@ def datasetPage(selected_projects):
     # Row 2:
     with my_grid.container():
         with stylable_container(
-                key="green_button",
+                key="stylable1",
                 css_styles="""
             {
                 border: 1px solid rgba(49, 51, 63, 0.2);
@@ -155,7 +166,7 @@ def datasetPage(selected_projects):
 
     with my_grid.container():
         with stylable_container(
-                key="green_button",
+                key="stylable1",
                 css_styles="""
             {
                 border: 1px solid rgba(49, 51, 63, 0.2);
@@ -173,12 +184,12 @@ def datasetPage(selected_projects):
             if img is not None:
                 pil_image = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
             if 'count' not in st.session_state:
-                st.session_state.count = 1
-            with video_grid.container():
-                st.metric(label="计数", value=st.session_state.count)
+                st.session_state.count = 0
+            # with video_grid.container():
+            #     st.metric(label="计数", value=st.session_state.count)
 
         with stylable_container(
-                key="green_button",
+                key="stylable1",
                 css_styles="""
             {
                 border: 1px solid rgba(49, 51, 63, 0.2);
@@ -189,11 +200,16 @@ def datasetPage(selected_projects):
             sub_grid = grid([2, 2], [8], [1], [1], [1], vertical_align="top")
             save_button = sub_grid.button("Save", use_container_width=True)
             reset_button = sub_grid.button("Reset", use_container_width=True)
+
             if save_button:
-                pil_image.save(save_path)
-                st.session_state.count += 1
-                sub_grid.success(f"Saved to {save_path}  successfully")
-                sub_grid.image(pil_image)
+                try :
+                    pil_image.save(save_path)
+                    st.session_state.count += 1
+                    sub_grid.success(f"Saved to {save_path}  success, count : {st.session_state.count}")
+                    # sub_grid.image(pil_image)
+                except:
+                    st.error("Open Camera firstly !")
             if reset_button:
-                st.session_state.count = 1
-                st.experimental_rerun()
+                st.session_state.count = 0
+                st.success(f"Reset success, count : {st.session_state.count}")
+                # st.rerun()
