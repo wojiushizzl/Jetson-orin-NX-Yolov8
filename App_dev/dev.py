@@ -156,11 +156,9 @@ def sidebar_setting():
             create_project()
         with st.expander("Delete Project", expanded=False):
             # 删除项目
-            try :
                 st.write(selected_project)
                 delete_project(selected_project)
-            except:
-                st.warning("No project exit")
+
     menu_data = [
         {'icon': "far fa-copy", 'label': "Datasets"},
         {'icon': "far fa-chart-bar", 'label': "Train"},  # no tooltip message

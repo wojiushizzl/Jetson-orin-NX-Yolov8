@@ -4,10 +4,34 @@ import cv2
 from PIL import Image
 from streamlit_webrtc import webrtc_streamer
 import uuid
+import zipfile
+import shutil
 import threading
 from streamlit_extras.grid import grid
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.stylable_container import stylable_container
+
+
+def clear_folder(target_folder):
+    # 确保目标文件夹存在
+    if not os.path.exists(target_folder):
+        st.warning(f"目标文件夹 '{target_folder}' 不存在。")
+        return
+
+    # 遍历目标文件夹中的所有文件并删除它们
+    for filename in os.listdir(target_folder):
+        file_path = os.path.join(target_folder, filename)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)  # 删除文件
+                st.success(f"目标文件'{filename}' 已清空。")
+            elif os.path.isdir(file_path):
+                clear_folder(file_path)  # 删除子文件夹
+                st.success(f"目标文件'{filename}' 已清空。")
+        except Exception as e:
+            st.error(f"无法删除文件 '{file_path}': {e}")
+
+    # st.rerun()
 
 
 def upload_images(selected_projects):
@@ -31,6 +55,9 @@ def upload_images(selected_projects):
                     f.write(uploaded_file.getvalue())
                 st.success(f"图片已成功保存到 {filename}。")
             st.rerun()
+    if st.button("Remove all images"):
+        clear_folder(target_folder)
+        st.rerun()
 
 
 def upload_labels(selected_projects):
@@ -55,7 +82,9 @@ def upload_labels(selected_projects):
                     f.write(uploaded_file.getvalue())
                 st.success(f"标签已成功保存到 {filename}。")
             st.rerun()
-
+    if st.button("Remove all labels"):
+        clear_folder(target_folder)
+        st.rerun()
 
 
 def upload_classes(selected_projects):
@@ -79,6 +108,43 @@ def upload_classes(selected_projects):
                 with open(filename, "wb") as f:
                     f.write(uploaded_file.getvalue())
                 st.success(f"标签已成功保存到 {filename}。")
+            st.rerun()
+
+
+def unzip_file(zip_file, extract_to):
+    # 确保提取目录存在
+    if not os.path.exists(extract_to):
+        os.makedirs(extract_to)
+
+    # 打开zip文件
+    with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+        # 解压缩所有文件到指定目录
+        zip_ref.extractall(extract_to)
+
+
+def upload_label_studio_zip(selected_projects):
+    target_folder = os.path.join('projects', selected_projects)
+    target_folder = os.path.join(target_folder, "datasets")
+    labels_folder = os.path.join(target_folder, "labels")
+    classes_file = os.path.join(target_folder, 'classes.txt')
+
+    # 上传datasets文件
+    uploaded_file = st.file_uploader("上传zip", type=["zip"], accept_multiple_files=False)
+    if uploaded_file is not None:
+        # st.write(target_folder)
+        if st.button("Datasets Upload Confirm"):
+            clear_folder(target_folder)
+
+            with open("uploaded_file.zip", "wb") as f:
+                f.write(uploaded_file.getbuffer())
+            # 解压缩上传的zip文件到目标文件夹
+            with zipfile.ZipFile("uploaded_file.zip", "r") as zip_ref:
+                zip_ref.extractall(target_folder)
+
+            # 复制文件到目标文件夹
+            shutil.copy(classes_file, labels_folder)
+
+            st.success(f"datasets已成功保存到 {target_folder}。")
             st.rerun()
 
 
@@ -153,7 +219,7 @@ def datasetPage(selected_projects):
             }
             """, ):
             dataset_info(selected_projects)
-
+        st.write("单独导入")
         with st.expander("导入图片", expanded=False):
             # 导入图片至目标项目
             upload_images(selected_projects)
@@ -163,7 +229,10 @@ def datasetPage(selected_projects):
         with st.expander("导入classes.txt", expanded=False):
             # 导入标签至目标项目
             upload_classes(selected_projects)
-
+        st.write("一键导入")
+        with st.expander("一键导入label-studio", expanded=False):
+            # 一键导入
+            upload_label_studio_zip(selected_projects)
     with my_grid.container():
         with stylable_container(
                 key="stylable1",
@@ -202,7 +271,7 @@ def datasetPage(selected_projects):
             reset_button = sub_grid.button("Reset", use_container_width=True)
 
             if save_button:
-                try :
+                try:
                     pil_image.save(save_path)
                     st.session_state.count += 1
                     sub_grid.success(f"Saved to {save_path}  success, count : {st.session_state.count}")
