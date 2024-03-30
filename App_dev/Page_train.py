@@ -120,12 +120,13 @@ def delete_project(selected_projects):
 
 
 def train_project(selected_projects):
-    train_grid = grid([2, 2], [1], [2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2], vertical_align="bottom")
+    train_grid = grid([2, 2,2], [1], [2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2], vertical_align="bottom")
+    name=train_grid.text_input('Comments',f"train_for_{selected_projects}")
+
     epochs = int(train_grid.number_input('epochs', value=50,
                                          help="训练历元总数。每个历元代表对整个数据集进行一次完整的训练。调整该值会影响训练时间和模型性能。"))
     batch = int(train_grid.number_input('batch', value=2,
                                         help="训练的批量大小，表示在更新模型内部参数之前要处理多少张图像。自动批处理 (batch=-1)会根据 GPU 内存可用性动态调整批处理大小。"))
-
     train_grid.write("高级设置")
     exist_ok = train_grid.toggle("exist_ok",
                                  help="如果为 True，则允许覆盖现有的项目/名称目录。这对迭代实验非常有用，无需手动清除之前的输出。")
@@ -156,7 +157,8 @@ def train_project(selected_projects):
 
     if st.button("训练项目"):
         train(
-            selected_projects,
+            name=name,
+            project_name=selected_projects,
             epochs=epochs,
             batch=batch,
             exist_ok=exist_ok,
@@ -233,16 +235,18 @@ def deploy(selected_projects):
     if not os.path.exists(train_path):
         os.makedirs(train_path)
     last_train_path = get_last_updated_folder(train_path)
-    st.write(f"last_train_path :{last_train_path}")
+
     if last_train_path is not None:
+        st.write(f"last_train_path :{last_train_path}")
         best_path = os.path.join(last_train_path, 'weights', 'best.pt')
         st.write(f"last train weights file path :{best_path}")
         if st.button('一键部署'):
             current_time = datetime.datetime.now()
             new_name = selected_projects + str(current_time) + '.pt'
             rename_and_copy(best_path, new_name, '../App_user/weight/detection/')
-            st.success('yep!')
-
+            st.success('Deploy to User App SUCCESS!')
+    else:
+        st.warning("No train result")
 
 # 用于遍历文件夹中的所有image文件
 def list_files(directory):
@@ -259,11 +263,17 @@ def train_result_show(selected_projects):
     if not os.path.exists(train_path):
         os.makedirs(train_path)
     last_train_path = get_last_updated_folder(train_path)
-    st.write(f"last_train_path :{last_train_path}")
-    image_list = list_files(last_train_path)
-    if image_list is not None:
-        for img in image_list:
-            st.image(img, caption=os.path.basename(img), use_column_width=True)
+    if last_train_path is not None:
+        st.write(f"last_train_path :{last_train_path}")
+        try:
+            image_list = list_files(last_train_path)
+            if image_list is not None:
+                for img in image_list:
+                    st.image(img, caption=os.path.basename(img), use_column_width=True)
+        except:
+            st.warning("No train reslut")
+    else:
+        st.warning("No train reslut")
 
 
 def trainpage(selected_projects):

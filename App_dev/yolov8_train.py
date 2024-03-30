@@ -4,6 +4,7 @@ import os
 
 
 def train(
+        name='test',
         project_name="test",#保存训练结果的项目目录名称。允许有组织地存储不同的实验。
         epochs=50, #训练历元总数。每个历元代表对整个数据集进行一次完整的训练。调整该值会影响训练时间和模型性能。
         batch=2, #训练的批量大小，表示在更新模型内部参数之前要处理多少张图像。自动批处理 (batch=-1)会根据 GPU 内存可用性动态调整批处理大小。
@@ -20,7 +21,7 @@ def train(
         mosaic=1.0, # float  0.0 - 1.0将四幅训练图像合成一幅，模拟不同的场景构成和物体互动。对复杂场景的理解非常有效。
         mixup=0,# float 0.0 - 1.0  混合两幅图像及其标签，创建合成图像。通过引入标签噪声和视觉变化，增强模型的泛化能力。
         copy_paste=0,#float 0.0 - 1.0  从一幅图像中复制物体并粘贴到另一幅图像上，用于增加物体实例和学习物体遮挡。
-        auto_augment='randaugment' #自动应用预定义的增强策略 (randaugment, autoaugment, augmix)，通过丰富视觉特征来优化分类任务。
+        auto_augment='randaugment', #自动应用预定义的增强策略 (randaugment, autoaugment, augmix)，通过丰富视觉特征来优化分类任务。
 ):
     project_path = os.path.join('projects', project_name)
     yaml_path = os.path.join(project_path, 'train.yaml')
@@ -29,6 +30,7 @@ def train(
     model = YOLO('yolov8n.pt')  # load a pretrained model (recommended for training)
     # Train the model
     results = model.train(
+        name=name,
         data=yaml_path,
         project=result_path,
         epochs=epochs,
