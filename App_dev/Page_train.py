@@ -7,6 +7,8 @@ import ruamel.yaml
 from yolov8_train import train
 from streamlit_extras.grid import grid
 from streamlit_extras.stylable_container import stylable_container
+import hydralit_components as hc
+import pandas as pd
 
 yaml = ruamel.yaml.YAML()
 
@@ -276,6 +278,38 @@ def train_result_show(selected_projects):
         st.warning("No train reslut")
 
 
+def train_progress(selected_projects):
+    train_path = os.path.join('projects', selected_projects, 'train')
+    if not os.path.exists(train_path):
+        os.makedirs(train_path)
+    last_train_path = get_last_updated_folder(train_path)
+    if last_train_path is not None:
+        st.write(f"last_train_path :{last_train_path}")
+        try:
+            results_csv=os.path.join(last_train_path,'results.csv')
+            args_yaml_path=os.path.join(last_train_path,'args.yaml')
+            # st.write(results_csv)
+            # st.write(args_yaml_path)
+            with open(args_yaml_path, 'r') as stream:
+                yaml_data = yaml.load(stream)
+
+            # 获取你想要的值，假设键为key_name
+            value = yaml_data['epochs']
+            # st.write(value)
+            # 读取CSV文件
+            df = pd.read_csv(results_csv)
+            st.dataframe(df)
+            # 获取名为"epoch"的列的最大值
+            max_epoch =  df.shape[0]
+
+            override_theme = {'content_color': 'white','progress_color': 'green'}
+            hc.progress_bar(int(max_epoch/value*100),f'Projects :  {selected_projects} still in Training, {max_epoch} / {value}',sentiment='good',override_theme=override_theme)
+        except:
+            st.warning("No train reslut")
+    else:
+        st.warning("No train reslut")
+
+
 def trainpage(selected_projects):
     # st.write(selected_projects)
 
@@ -286,6 +320,10 @@ def trainpage(selected_projects):
     with st.expander("Start train", expanded=True):
         # 训练
         train_project(selected_projects)
+
+    with st.expander("Training", expanded=True):
+        # 训练
+        train_progress(selected_projects)
 
     with st.expander("Deploy to User App", expanded=True):
         # 部署
