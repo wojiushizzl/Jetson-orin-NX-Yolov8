@@ -3,7 +3,7 @@
 ```bash
 git clone https://github.com/wojiushizzl/Jetson-orin-NX-Yolov8.git
 ```
-# Install jetpack & jtop 
+# ---Install jetpack & jtop 
 ## 1. Install Archiconda instead of miniconda
 reference https://blog.csdn.net/gls_nuaa/article/details/135630629
 
@@ -75,7 +75,7 @@ Libraries:
 ```
 
 
-# Install torch & torchvision & yolov8 & etc.
+# ---Install torch & torchvision & yolov8 & etc.
 ## 1. Install torch
 [Download the torch wheel](https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048)
 **torch-1.8.0-cp36-cp36m-linux_aarch64.whl** 
@@ -173,7 +173,7 @@ $ sudo apt-get install qttools5-dev-tools
 $ designer 
 ```
 
-# Run
+# ---Run
 ## 1. Run yolov8 demo
 
 ```bash
@@ -203,7 +203,7 @@ conda activate yolov8
 streamlit run dev.py
 ```
 
-# Optional
+# ---Optional
 ## *. Install VSCode  (optional)
 [Download arm64 version "code_1.87.2-1709911730_arm64.deb"](https://code.visualstudio.com/docs/?dv=linuxarm64_deb)
 ```bash
