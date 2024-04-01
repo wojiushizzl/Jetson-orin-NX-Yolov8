@@ -3,35 +3,8 @@
 ```bash
 git clone https://github.com/wojiushizzl/Jetson-orin-NX-Yolov8.git
 ```
-
-## 1. Install Sunlogin  (optional)
-[Download the Kylin Arm64 version   ](https://sunlogin.oray.com/download/linux?type=personal&ici=sunlogin_navigation) 
-	
-**SunloginClient_11.0.1.44968_kylin_arm.deb**
-
-```bash
-#install 
-$ sudo dpkg -i SunloginClient_11.0.1.44968_kylin_arm.deb 
-
-#start
-$ /usr/local/sunlogin/bin/sunloginclient
-
-#uninstall
-$ sudo dpkg -r sunloginclient
-
-#Set Sunlogin start with sys starting
-open app "startup application"
-add command "/usr/local/sunlogin/bin/sunloginclient"
-
-$ reboot
-```
-## 2. pip change source
-
-```bash
-$ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-```
-
-## 3. Install Archiconda instead of miniconda
+# Install jetpack & jtop 
+## 1. Install Archiconda instead of miniconda
 reference https://blog.csdn.net/gls_nuaa/article/details/135630629
 
 ```bash
@@ -59,7 +32,7 @@ $ conda activate yolov8
 $ conda remove -n yolov8 --all
 
 ```
-## 4. Install nvidia-jetpack
+## 2. Install nvidia-jetpack
 ```bash
 $ sudo apt upgrade
 $ sudo apt update
@@ -67,14 +40,14 @@ $ sudo apt dist-upgrade
 $ sudo reboot
 $ sudo apt install nvidia-jetpack 
 ```
-## 5. Install jtop
+## 3. Install jtop
 ```bash	
 $ sudo apt install python3-pip
 $ sudo -H pip3 install -U jetson-stats
 $ sudo reboot
 ```
 
-## 6. Check 
+## 4. Check 
 ```bash
 $ sudo jetson_release
 ```
@@ -102,12 +75,13 @@ Libraries:
 ```
 
 
-
-## 7. Install torch
+# Install torch & torchvision & yolov8 & etc.
+## 1. Install torch
 [Download the torch wheel](https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048)
 **torch-1.8.0-cp36-cp36m-linux_aarch64.whl** 
 Must check the jetpach version !!!
 ```bash
+$ conda activate yolov8
 $ sudo apt-get -y update
 $ sudo apt-get -y install autoconf bc build-essential g++-8 gcc-8 clang-8 lld-8 gettext-base gfortran-8 iputils-ping libbz2-dev libc++-dev libcgal-dev libffi-dev libfreetype6-dev libhdf5-dev libjpeg-dev liblzma-dev libncurses5-dev libncursesw5-dev libpng-dev libreadline-dev libssl-dev libsqlite3-dev libxml2-dev libxslt-dev locales moreutils openssl python-openssl rsync scons python3-pip libopenblas-dev
 $ pip install 'Cython<3'
@@ -129,7 +103,7 @@ print(torch.backends.cudnn.version())
 ```
 **Success !**
 	
-## 8. Install torchvision
+## 2. Install torchvision
 Select the version of torchvision to download depending on the version of PyTorch that you have installed:
 ```
     PyTorch v1.0 - torchvision v0.2.2
@@ -152,6 +126,7 @@ Select the version of torchvision to download depending on the version of PyTorc
 ```
 ```bash
 #Install
+$ conda activate yolov8
 $ sudo apt-get install libjpeg-dev zlib1g-dev libpython3-dev libopenblas-dev libavcodec-dev libavformat-dev libswscale-dev
 $ git clone --branch v0.16.1 https://github.com/pytorch/vision torchvision
 $ cd torchvision
@@ -163,17 +138,22 @@ $ pip install 'pillow<7' # always needed for Python 2.7, not needed torchvision 
 ```bash
 #Verify
 $ python
-
+```
+```python
 import torchvision
 print(torchvision.__version__)
 ```
 
-## 9. Install yolov8
+## 3. Install yolov8
 ```bash
+$ conda activate yolov8
 $ pip install ultralytics
 ```
-## 10. Install streamlit  etc. (optional)
+
+## 4. Install related package  etc. (optional)
 ```bash	
+$ conda activate yolov8
+## for streamlit related
 $ pip install streamlit
 $ pip install -U streamlit-webrtc
 $ pip install playsound
@@ -182,23 +162,56 @@ $ pip install ruamel.yaml
 $ pip install streamlit-extras
 $ pip install streamlit_card
 $ pip install streamlit-option-menu
+
 ## for OUTPUT GPIO
 $ pip install Jetson.GPIO
 $ pip install bottle
+
 ## for qt design
 $ sudo pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple/ pyqt5==5.15.2
 $ sudo apt-get install qttools5-dev-tools
 $ designer 
 ```
 
-## 11. Install VSCode  (optional)
+# Run
+## 1. Run yolov8 demo
+
+```bash
+cd Jetson-orin-NX-Yolov8
+sudo python3 setup.py
+```
+
+```bash
+#run simple demo for predict single image
+cd Jetson-orin-NX-Yolov8
+cd demo
+conda activate yolov8
+python yolov8_demo.py
+```
+```bash
+#run webapp demo  user model
+cd Jetson-orin-NX-Yolov8
+cd App_user
+conda activate yolov8
+streamlit run app.py
+```
+```bash
+#run webapp demo  develop model
+cd Jetson-orin-NX-Yolov8
+cd App_dev
+conda activate yolov8
+streamlit run dev.py
+```
+
+# Optional
+## *. Install VSCode  (optional)
 [Download arm64 version "code_1.87.2-1709911730_arm64.deb"](https://code.visualstudio.com/docs/?dv=linuxarm64_deb)
 ```bash
 #Install
 $ sudo dpkg -i code_1.87.2-1709911730_arm64.deb
 ```
 
-## 12. Install labelimg  (optional)
+## *. Install labelimg  (optional)
 
 https://github.com/HumanSignal/labelImg
 ```bash
@@ -214,7 +227,7 @@ python labelImg.py
 python labelImg.py [IMAGE_PATH] [PRE-DEFINED CLASS FILE]
 
 ```
-## 13. Install label-studio  (optional)
+## *. Install label-studio  (optional)
 [Label studio github](https://github.com/HumanSignal/label-studio?tab=readme-ov-file)
 
 ```bash
@@ -228,32 +241,27 @@ pip install label-studio
 label-studio
 ```
 
-
-
-## 13. Run yolov8 demo
+## *. Install Sunlogin  (optional)
+[Download the Kylin Arm64 version   ](https://sunlogin.oray.com/download/linux?type=personal&ici=sunlogin_navigation) 
+	
+**SunloginClient_11.0.1.44968_kylin_arm.deb**
 
 ```bash
-#run simple demo for predict single image
-cd JETSON-ORIN-NX-ENV
-cd demo
-conda activate yolov8
-python yolov8_demo.py
-```
-```bash
-#run webapp demo  user model
-cd JETSON-ORIN-NX-ENV
-cd App_user
-conda activate yolov8
-streamlit run app.py
-```
-```bash
-#run webapp demo  develop model
-cd JETSON-ORIN-NX-ENV
-cd App_dev
-conda activate yolov8
-streamlit run dev.py
-```
+#install 
+$ sudo dpkg -i SunloginClient_11.0.1.44968_kylin_arm.deb 
 
+#start
+$ /usr/local/sunlogin/bin/sunloginclient
+
+#uninstall
+$ sudo dpkg -r sunloginclient
+
+#Set Sunlogin start with sys starting
+open app "startup application"
+add command "/usr/local/sunlogin/bin/sunloginclient"
+
+$ reboot
+```
 ## *. others
 ```bash
 #check system version 
@@ -274,6 +282,8 @@ $ sudo apt-cache show nvidia-jetpack
 #check LT4 version
 $ cat /etc/nv_tegra_release 
 # R35 (release), REVISION: 3.1, GCID: 32827747, BOARD: t186ref, EABI: aarch64, DATE: Sun Mar 19 15:19:21 UTC 2023
-```
 
+#pip change source
+$ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+```
 
