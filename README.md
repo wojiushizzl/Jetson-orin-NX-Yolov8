@@ -177,8 +177,10 @@ $ designer
 ## 1. Run yolov8 demo
 
 ```bash
+conda activate yolov8
 cd Jetson-orin-NX-Yolov8
-sudo python3 setup.py
+sudo chmod 777 /usr/share/applications/
+python setup.py
 ```
 
 ```bash
