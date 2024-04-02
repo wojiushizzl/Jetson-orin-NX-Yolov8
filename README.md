@@ -162,6 +162,7 @@ $ pip install ruamel.yaml
 $ pip install streamlit-extras
 $ pip install streamlit_card
 $ pip install streamlit-option-menu
+$ pip install pyautogui
 
 ## for OUTPUT GPIO
 $ pip install Jetson.GPIO
