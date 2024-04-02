@@ -1,7 +1,7 @@
 import os
 import shutil
 import ruamel.yaml
-
+import subprocess
 
 current_path = os.getcwd()
 
@@ -32,10 +32,20 @@ with open(sh_path, 'r') as f:
     sh_lines = f.readlines()
 
 cd_command = 'cd ' + userapp_path + '\n'
-
 for i in range(len(sh_lines)):
     if 'cd' in sh_lines[i]:
         sh_lines[i] = cd_command
+
+try:
+    condash_path=subprocess.check_output(['locate','conda.sh'])
+    condash_path=condash_path.decode().split('\n')[0]
+    source_command='source '+condash_path +'\n'
+
+    for i in range(len(sh_lines)):
+        if 'source' in sh_lines[i]:
+            sh_lines[i] = source_command
+except:
+    print('No conda detected !')
 
 with open(sh_path, 'w') as f:
     f.writelines(sh_lines)
