@@ -179,6 +179,7 @@ $ designer
 ```bash
 conda activate yolov8
 cd Jetson-orin-NX-Yolov8
+sudo apt install mlocate
 sudo chmod 777 /usr/share/applications/
 python setup.py
 ```
