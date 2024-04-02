@@ -260,6 +260,15 @@ $ sudo dpkg -r sunloginclient
 open app "startup application"
 add command "/usr/local/sunlogin/bin/sunloginclient"
 
+## *. install vnc server & viewer
+download ........
+```bash
+sudo .....
+
+```
+
+
+
 $ reboot
 ```
 ## *. others
