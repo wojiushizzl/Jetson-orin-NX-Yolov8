@@ -9,6 +9,9 @@ from utils import *
 from logic_check import LOGIC
 from output import OUTPUT,output
 import Jetson.GPIO as GPIO
+import pyautogui
+from streamlit_extras.grid import grid
+
 
 # setting page layout
 st.set_page_config(
@@ -86,21 +89,31 @@ def output_select():
     GPIO.setwarnings(False)
     GPIO.setup(RelayA, GPIO.OUT, initial=GPIO.HIGH)
     ### select the output ###
-    output_list = st.multiselect("Output", OUTPUT[:-1], default=OUTPUT[:-1])
+    output_list = st.multiselect("Output", OUTPUT[:-1], default=OUTPUT[2])
     reaction_speed = int(st.slider(
-        "Select Reaction Speed", 10, 100, 10))
-    reset_button = st.button('Reset')
-    stop_button =st.button('Stop')
+        "Select Reaction Speed", 10, 100, 30))
+
+    return output_list, reaction_speed
+
+def buttons():
+    button_grid=grid([2,2,2],vertical_align='top')
+    reset_button = button_grid.button('Reset')
+    stop_button =button_grid.button('Stop')
+    fullscreen_button=button_grid.button('Full screen')
     if reset_button:
-        output('Reset')
+        # output('Reset')
+        # st.rerun()
+        pyautogui.press('f5')
     if stop_button:
         output('Stop')
-    return output_list, reaction_speed, reset_button
+    if fullscreen_button:
+        pyautogui.press('f11')
 
 
 # sidebar
-st.sidebar.header("Customer Config")
 with st.sidebar:
+    with st.expander("Operate", expanded=True):
+        buttons()
     with st.expander("Model Config", expanded=True):
         task_type, model, confidence, classes_list = model_config()
     with st.expander("Video&Image Switch", expanded=False):
@@ -110,7 +123,7 @@ with st.sidebar:
     with st.expander("Logic Select", expanded=False):
         logic = logic_select()
     with st.expander("Output Select", expanded=True):
-        output_list, reaction_speed, reset_button = output_select()
+        output_list, reaction_speed = output_select()
 
 # st.write(classes_list)
 source_img = None
@@ -122,7 +135,7 @@ elif source_selectbox == config.SOURCES_LIST[1]:  # Video
 elif source_selectbox == config.SOURCES_LIST[2]:  # Webcam
     if task_type == config.TASK_TYPE_LIST[0]:
         infer_uploaded_webcam_det(confidence, model, target_list, logic, output_list, reaction_speed,
-                                  reset_button)  # Detection task
+                                  )  # Detection task
 
 
 else:

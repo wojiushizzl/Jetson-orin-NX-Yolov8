@@ -166,14 +166,13 @@ def puttext(text, res_plotted, color):
     res_plotted[:, -border_width:] = color
 
 
-def infer_uploaded_webcam_det(conf, model, target_list, logic, output_list, reaction_speed, reset_button):
+def infer_uploaded_webcam_det(conf, model, target_list, logic, output_list, reaction_speed):
     """
     Execute inference for webcam.
     :param conf: Confidence of YOLOv8 model
     :param model: An instance of the `YOLOv8` class containing the YOLOv8 model.
     :return: None
     """
-    st.write(str(target_list) + logic + str(output_list))
 
     lock = threading.Lock()
     frame_num = reaction_speed
@@ -227,3 +226,4 @@ def infer_uploaded_webcam_det(conf, model, target_list, logic, output_list, reac
             else:
                 output('Reset')
                 continue
+    st.write(str(target_list) + logic + str(output_list))
