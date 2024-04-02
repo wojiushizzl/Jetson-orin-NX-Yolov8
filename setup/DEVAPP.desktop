@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=DEV_WEBAPP
+Exec=bash /home/zzl/Downloads/Jetson-orin-NX-Yolov8/setup/dev.sh
+Type=Application
+Terminal=true
+StartupNotify=true
+Icon=/home/zzl/Downloads/Jetson-orin-NX-Yolov8/setup/dev_logo.png
