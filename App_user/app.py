@@ -21,6 +21,10 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+output('Stop')
+if 'FULL' not in st.session_state :
+    st.session_state.FULL=True
+    pyautogui.press("f11")
 
 def model_config():
     # model options
@@ -97,17 +101,18 @@ def output_select():
 
 def buttons():
     button_grid=grid([2,2,2],vertical_align='top')
-    reset_button = button_grid.button('Reset')
-    stop_button =button_grid.button('Stop')
-    fullscreen_button=button_grid.button('Full screen')
+    reset_button = button_grid.button('OPEN')
+    stop_button =button_grid.button('STOP')
+    fullscreen_button=button_grid.button('FULL')
     if reset_button:
-        # output('Reset')
+        output('Reset')
         # st.rerun()
-        pyautogui.press('f5')
+        # pyautogui.press('f5')
     if stop_button:
         output('Stop')
     if fullscreen_button:
         pyautogui.press('f11')
+        st.session_state.FULL= not st.session_state.FULL
 
 
 # sidebar
