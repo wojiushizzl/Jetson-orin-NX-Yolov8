@@ -174,9 +174,9 @@ def infer_uploaded_webcam_det(conf, model, target_list, logic, output_list, reac
     :return: None
     """
 
-    lock = threading.Lock()
-    frame_num = reaction_speed
-    zzl = [0] * frame_num
+    # lock = threading.Lock()
+    # frame_num = reaction_speed
+    # zzl = [0] * frame_num
 
     def video_frame_callback(frame):
         # Resize the image to a standard size
@@ -192,19 +192,22 @@ def infer_uploaded_webcam_det(conf, model, target_list, logic, output_list, reac
         if check:
             result = "NOK"
             color = [0, 0, 255]
+            output('Stop')
         else:
             result = "OK"
             color = [0, 255, 0]
+            output('Reset')
+
         # Plot the detected objects on the video frame
         count = len(list(boxes.cls))
         res_plotted = res[0].plot()
         puttext(result, res_plotted, color)
 
-        with lock:
-            if check ==True:
-                zzl.append(1)
-            elif check==False:
-                zzl.append(0)
+        # with lock:
+        #     if check ==True:
+        #         zzl.append(1)
+        #     elif check==False:
+        #         zzl.append(0)
         return av.VideoFrame.from_ndarray(res_plotted, format="bgr24")
 
     stream = webrtc_streamer(
@@ -212,18 +215,18 @@ def infer_uploaded_webcam_det(conf, model, target_list, logic, output_list, reac
         video_frame_callback=video_frame_callback,
 
     )
-    while stream.state.playing:
-        with lock:
-            zzl = zzl[-1 * frame_num:]
-            x = sum(zzl)
-            time.sleep(0.001)
-            if x > frame_num * 0.8:
-                try:
-                    for o in output_list:
-                        output(o)
-                except:
-                    print('error, OUTPUT failed')
-            else:
-                output('Reset')
-                continue
+    # while stream.state.playing:
+    #     with lock:
+    #         zzl = zzl[-1 * frame_num:]
+    #         x = sum(zzl)
+    #         time.sleep(0.001)
+    #         if x > frame_num * 0.8:
+    #             try:
+    #                 for o in output_list:
+    #                     output(o)
+    #             except:
+    #                 print('error, OUTPUT failed')
+    #         else:
+    #             output('Reset')
+    #             continue
     st.write(str(target_list) + logic + str(output_list))

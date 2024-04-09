@@ -16,12 +16,16 @@ from streamlit_extras.grid import grid
 # setting page layout
 st.set_page_config(
     page_title="FAHAI",
-    page_icon='/home/zzl/Desktop/logo.png',
+    page_icon='../setup/logo.png',
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-output('Stop')
+RelayA = [21, 20, 26]
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+GPIO.setup(RelayA, GPIO.OUT, initial=GPIO.LOW)
+# output('Stop')
 if 'FULL' not in st.session_state :
     st.session_state.FULL=True
     pyautogui.press("f11")
@@ -88,10 +92,6 @@ def logic_select():
 
 
 def output_select():
-    RelayA = [21, 20, 26]
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setwarnings(False)
-    GPIO.setup(RelayA, GPIO.OUT, initial=GPIO.HIGH)
     ### select the output ###
     output_list = st.multiselect("Output", OUTPUT[:-1], default=OUTPUT[2])
     reaction_speed = int(st.slider(
