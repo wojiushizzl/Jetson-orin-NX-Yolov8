@@ -3,36 +3,9 @@
 ```bash
 git clone https://github.com/wojiushizzl/Jetson-orin-NX-Yolov8.git
 ```
-# ---Install jetpack & jtop 
-## 1. Install Archiconda instead of miniconda
-reference https://blog.csdn.net/gls_nuaa/article/details/135630629
+# ---   Install jetpack & jtop 
 
-```bash
-wget https://github.com/Archiconda/build-tools/releases/download/0.2.3/Archiconda3-0.2.3-Linux-aarch64.sh
-
-#install
-$ bash Archiconda3-0.2.3-Linux-aarch64.sh
-
-#restart Terminal, check 
-$ conda 
-
-#change conda source
-$ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
-$ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge 
-$ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/msys2/
-$ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
-
-#create conda env 
-$ conda create -n yolov8 python=3.8
-
-#activate env
-$ conda activate yolov8
-
-#remove env
-$ conda remove -n yolov8 --all
-
-```
-## 2. Install nvidia-jetpack
+## 1. Install nvidia-jetpack
 ```bash
 $ sudo apt upgrade
 $ sudo apt update
@@ -40,14 +13,14 @@ $ sudo apt dist-upgrade
 $ sudo reboot
 $ sudo apt install nvidia-jetpack 
 ```
-## 3. Install jtop
+## 2. Install jtop
 ```bash	
 $ sudo apt install python3-pip
 $ sudo -H pip3 install -U jetson-stats
 $ sudo reboot
 ```
 
-## 4. Check 
+## 3. Check 
 ```bash
 $ sudo jetson_release
 ```
@@ -73,9 +46,22 @@ Libraries:
     - Vulkan: 1.3.204
     - OpenCV: 4.5.4 - with CUDA: NO
 ```
+# ---   Install Jetson.inference  
 
+```bash
+sudo apt-get update
+sudo apt-get install git cmake libpython3-dev python3-numpy
+git clone --recursive --depth=1 https://github.com/dusty-nv/jetson-inference
+cd jetson-inference
+mkdir build
+cd build
+cmake ../
+make -j$(nproc)
+sudo make install
+sudo ldconfig
+```
 
-# ---Install torch & torchvision & yolov8 & etc.
+# ---   Install torch & torchvision & yolov8 & etc.
 ## 1. Install torch
 [Download the torch wheel](https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048)
 **torch-1.8.0-cp36-cp36m-linux_aarch64.whl** 
@@ -153,6 +139,11 @@ $ pip install ultralytics
 ## 4. Install related package  etc. (optional)
 ```bash	
 $ conda activate yolov8
+
+$ pip install -r requirements
+
+## or follow below comand for single package
+
 ## for streamlit related
 $ pip install streamlit
 $ pip install -U streamlit-webrtc
@@ -168,10 +159,7 @@ $ pip install pyautogui
 $ pip install Jetson.GPIO
 $ pip install bottle
 
-## for qt design
-$ sudo pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple/ pyqt5==5.15.2
-$ sudo apt-get install qttools5-dev-tools
-$ designer 
+
 ```
 
 # ---Run
@@ -191,7 +179,9 @@ cd Jetson-orin-NX-Yolov8
 cd demo
 conda activate yolov8
 python yolov8_demo.py
+python demo.py
 ```
+
 ```bash
 #run webapp demo  user model
 cd Jetson-orin-NX-Yolov8
@@ -267,27 +257,39 @@ add command "/usr/local/sunlogin/bin/sunloginclient"
 ## *. install vnc server & viewer
 download ........
 ```bash
-sudo .....
+# to be continue
 
 ```
-## *. Install Jetson.inference  (optional)
+
+## *. Install Archiconda instead of miniconda
+reference https://blog.csdn.net/gls_nuaa/article/details/135630629
 
 ```bash
-sudo apt-get update
-sudo apt-get install git cmake libpython3-dev python3-numpy
-git clone --recursive --depth=1 https://github.com/dusty-nv/jetson-inference
-cd jetson-inference
-mkdir build
-cd build
-cmake ../
-make -j$(nproc)
-sudo make install
-sudo ldconfig
+wget https://github.com/Archiconda/build-tools/releases/download/0.2.3/Archiconda3-0.2.3-Linux-aarch64.sh
+
+#install
+$ bash Archiconda3-0.2.3-Linux-aarch64.sh
+
+#restart Terminal, check 
+$ conda 
+
+#change conda source
+$ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+$ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge 
+$ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/msys2/
+$ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
+
+#create conda env 
+$ conda create -n yolov8 python=3.8
+
+#activate env
+$ conda activate yolov8
+
+#remove env
+$ conda remove -n yolov8 --all
+
 ```
 
-
-$ reboot
-```
 ## *. others
 ```bash
 #check system version 

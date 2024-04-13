@@ -23,4 +23,3 @@ while display.IsStreaming():
     display.SetStatus("YOLOV8 DEECTION ")
 
 
-# Load the YOLOv8 model

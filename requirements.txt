@@ -9,4 +9,3 @@ ruamel.yaml==0.18.6
 Jetson.GPIO==2.1.1
 bottle==0.12.25
 PyAutoGUI==0.9.54
-ultralytics==8.1.34
