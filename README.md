@@ -47,7 +47,7 @@ Libraries:
     - OpenCV: 4.5.4 - with CUDA: NO
 ```
 # ---   Install Jetson.inference  
-
+[Jetson.inference doc](https://github.com/dusty-nv/jetson-inference/blob/master/docs/building-repo-2.md#compiling-the-project)
 ```bash
 sudo apt-get update
 sudo apt-get install git cmake libpython3-dev python3-numpy
