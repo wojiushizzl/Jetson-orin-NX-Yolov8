@@ -40,8 +40,8 @@ for i in range(len(sh_lines)):
         sh_lines[i] = cd_command
 
 try:
-    condash_path=subprocess.check_output(['locate','conda.sh'])
-    condash_path=condash_path.decode().split('\n')[0]
+    condash_path=subprocess.run(['sudo','find','/','-name','conda.sh'],stdout=subprocess.PIPE)
+    condash_path=condash_path.stdout.decode('utf-8')
     source_command='source '+condash_path +'\n'
 
     for i in range(len(sh_lines)):
@@ -63,8 +63,8 @@ for i in range(len(sh_lines)):
         sh_lines[i] = cd_command
 
 try:
-    condash_path=subprocess.check_output(['locate','conda.sh'])
-    condash_path=condash_path.decode().split('\n')[0]
+    # condash_path=subprocess.run(['find','/','-name','conda.sh'],stdout=subprocess.PIPE)
+    # condash_path=condash_path.stdout.decode('utf-8')
     source_command='source '+condash_path +'\n'
 
     for i in range(len(sh_lines)):
