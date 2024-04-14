@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Open Camera</title>
+</head>
+<body>
+
+<video id="video" width="640" height="480" autoplay></video>
+
+<script>
+  const videoElement = document.getElementById('video');
+
+  // 确认浏览器支持getUserMedia
+  if (navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: true }) // 请求视频流
+      .then(function(stream) {
+        videoElement.srcObject = stream; // 将视频流设置到<video>元素
+      })
+      .catch(function(err0r) {
+        console.log("获取摄像头错误：" + err0r);
+      });
+  }
+</script>
+
+</body>
+</html>
