@@ -42,9 +42,16 @@ def model_config():
         "Select Model",
         config.MODEL_LIST[task_type]
     )
-
+    
+    try :
+        conf=st.query_params['conf']
+    except:
+        st.query_params['conf']=30
+        conf=st.query_params['conf']
+    print(conf)
     confidence = float(st.slider(
-        "Select Model Confidence", 30, 100, 30)) / 100
+        "Select Model Confidence", 30, 100, int(float(conf)))) / 100
+    st.query_params['conf']=confidence*100
 
     model_path = ""
 
