@@ -1,9 +1,17 @@
 import tkinter as tk
 from tkinter import ttk
 # from PIL import Image,ImageTk
-import ctypes                   #可让python与C语言混合使用
+# import ctypes                   #可让python与C语言混合使用
 #告诉操作系统使用程序自身的dpi适配
-ctypes.windll.shcore.SetProcessDpiAwareness(1)
+# ctypes.windll.shcore.SetProcessDpiAwareness(1)
+import cv2
+from PIL import Image, ImageTk
+import threading
+import uuid
+from ultralytics import YOLO
+
+model = YOLO('yolov8n.pt')
+
 
 class mytkinter(tk.Tk):
     width=800
@@ -13,7 +21,6 @@ class mytkinter(tk.Tk):
     first_load=True
     # def __init__(self):
     #     super().__init__()
-
 
     def setupUi(self):
         self.config(bg='#666888', bd=0)
@@ -25,6 +32,10 @@ class mytkinter(tk.Tk):
         geometry_str = "{}x{}+{}+{}".format(self.width, self.height, center_geometry[0], center_geometry[1])
         print(geometry_str)
         self.geometry(geometry_str)
+
+        #启用摄像头获取
+        self.vid = cv2.VideoCapture(0)
+
 
         # 画布
         self.cv = tk.Canvas(self, bg='snow')
@@ -52,16 +63,16 @@ class mytkinter(tk.Tk):
         self.tab_main.add(self.tab4, text='设置')
 
         #tab1
-        self.VLabel1 = self.myViewLabel(self.tab1, 0.005, 0.1, 0.49, 0.9)
-        self.VLabel2 = self.myViewLabel(self.tab1, 0.505, 0.1, 0.49, 0.9)
+        self.VLabel1 = self.myViewLabel(self.tab1, 0.005, 0.01, 0.49, 0.99)
+        self.VLabel2 = self.myViewLabel(self.tab1, 0.505, 0.01, 0.49, 0.99)
 
         # tab2
-        self.VLabel3 = self.myViewLabel(self.tab2, 0.005, 0.1, 0.49, 0.9)
-        self.VLabel4 = self.myViewLabel(self.tab2, 0.505, 0.1, 0.49, 0.9)
+        self.VLabel3 = self.myViewLabel(self.tab2, 0.005, 0.01, 0.49, 0.99)
+        self.VLabel4 = self.myViewLabel(self.tab2, 0.505, 0.01, 0.49, 0.99)
 
         # tab3
-        self.VLabel5 = self.myViewLabel(self.tab3, 0.005, 0.1, 0.49, 0.9)
-        self.VLabel6 = self.myViewLabel(self.tab3, 0.505, 0.1, 0.49, 0.9)
+        self.VLabel5 = self.myViewLabel(self.tab3, 0.005, 0.01, 0.99, 0.99)
+        # self.VLabel6 = self.myViewLabel(self.tab3, 0.505, 0.01, 0.49, 0.99)
 
         # tab4
         self.btn1=tk.Button(self.tab4,text='选择权重',bd=0,bg='black',fg='white')
@@ -106,6 +117,7 @@ class mytkinter(tk.Tk):
         self.btn2=tk.Button(self.tab4,text="保存设置", bd=0, bg='black', fg='white')
         self.btn2.place(relx=0.51, rely=0.05, y=150, relwidth=0.48, height=30)
 
+        self.update()
     def myViewLabel(self,master,relx,rely,relwidth,relheight):#自定义标签，用于显示图片，可实现图片的放大缩小
         label=tk.Label(master,bg='#666888',bd=0)
         label.place(relx=relx,rely=rely,relwidth=relwidth,relheight=relheight)
@@ -114,7 +126,21 @@ class mytkinter(tk.Tk):
 
 
 
-# top=mytkinter()
-# # top.config(bg='red')
-# top.mainloop()
 
+    def update(self):
+        ret, frame = self.vid.read()
+        if ret:
+            frame = cv2.resize(frame, (self.width, self.height))
+            print('Open Yolo')
+            results = model(frame,conf=0.5)
+            frame = results[0].plot()
+
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            imgtk = ImageTk.PhotoImage(image=Image.fromarray(frame))
+            self.VLabel5.imgtk = imgtk
+            self.VLabel5.config(image=imgtk)
+            self.after(1, self.update)
+
+    def __del__(self):
+        if self.vid.isOpened():
+            self.vid.release()
