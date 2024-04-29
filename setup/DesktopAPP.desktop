@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Desktop_APP
+Exec=bash /home/mse9/Downloads/Jetson-orin-NX-Yolov8/setup/desktop.sh
+Type=Application
+Terminal=true
+StartupNotify=true
+Icon=/home/mse9/Downloads/Jetson-orin-NX-Yolov8/setup/desktop_logo.png
