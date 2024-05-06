@@ -34,6 +34,9 @@ class mytkinter(tk.Tk):
     def setupUi(self):
         self.config(bg='#666888', bd=0)
         self.title("YOLOv8 检测")
+        self.attributes('-fullscreen',True)
+        self.bind('<F11>',self.toggle_fullscreen)
+
         screen_width = self.winfo_screenwidth()  # 电脑屏幕宽度
         screen_height = self.winfo_screenheight()
         print(screen_width, screen_height)
@@ -54,6 +57,9 @@ class mytkinter(tk.Tk):
         self.tab_main = ttk.Notebook(self.cv)
         # self.tab_main.pack(expand=1,fill='both')#这段代码很重要
 
+        self.tab3 = tk.Frame(self.tab_main, bg='#eeebbb')
+        self.tab3.place(relx=0.05, rely=0.1, relwidth=0.8, relheight=0.8)
+        self.tab_main.add(self.tab3, text='摄像头检测')
 
         self.tab1 = tk.Frame(self.tab_main, bg='snow')
         self.tab1.place(relx=0.05, rely=0.1, relwidth=0.9, relheight=0.9)
@@ -63,9 +69,7 @@ class mytkinter(tk.Tk):
         self.tab2.place(relx=0.05, rely=0.1, relwidth=0.9, relheight=0.9)
         self.tab_main.add(self.tab2, text='视频检测')
 
-        self.tab3 = tk.Frame(self.tab_main, bg='#eeebbb')
-        self.tab3.place(relx=0.05, rely=0.1, relwidth=0.9, relheight=0.9)
-        self.tab_main.add(self.tab3, text='摄像头检测')
+
 
         self.tab4 = tk.Frame(self.tab_main, bg='#666888')
         self.tab4.place(relx=0.05, rely=0.1, relwidth=0.9, relheight=0.9)
@@ -143,6 +147,11 @@ class mytkinter(tk.Tk):
         self.protocol('WM_DELETE_WINDOW',self.__del__)
 
 
+    def toggle_fullscreen(self,event=None):
+        state=not self.attributes('-fullscreen')
+        self.attributes('-fullscreen',state)
+        self.bind('<Escape>',self.toggle_fullscreen)
+
         
     # 保存配置到文件
     def save_config(self):
@@ -208,7 +217,7 @@ class mytkinter(tk.Tk):
         font = cv2.FONT_HERSHEY_SIMPLEX
         font_scale = 1
         font_thickness = 2
-        font_color = color  # 白色
+        font_color = color  # 
         # 获取文本的大小
         text_size = cv2.getTextSize(text, font, font_scale, font_thickness)[0]
         text_position = ((res_plotted.shape[1] - text_size[0]) // 2, (res_plotted.shape[0] + text_size[1]) // 2)
@@ -229,7 +238,16 @@ class mytkinter(tk.Tk):
         # print('Open Yolo')
 
         if ret and self.ifstart:
-            frame = cv2.resize(frame, (self.width, self.height))
+            frame_size_rate=frame.shape[1]/frame.shape[0]
+
+            if self.width/self.height < frame_size_rate:
+                w=int(self.width)
+                h=int(self.width/frame_size_rate)
+            else:
+                w=int(self.height*frame_size_rate)
+                h=int(self.height)
+
+            frame = cv2.resize(frame, (w,h))
             res = self.model.predict(
                 frame,
                 conf=float(self.var3.get()),
