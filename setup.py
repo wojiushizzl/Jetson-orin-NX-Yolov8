@@ -44,6 +44,11 @@ print(userapp_path)
 print(devapp_path)
 print(dt_path)
 
+
+#  add Permission  /usr/share/applications/
+subprocess.run(['sudo','chmod','777','/usr/share/applications/'])
+
+
 # modify start.sh file
 with open(user_sh_path, 'r') as f:
     sh_lines = f.readlines()
