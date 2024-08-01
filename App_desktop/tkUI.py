@@ -19,7 +19,14 @@ from output import output
 RelayA = [21, 20, 26]
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
-GPIO.setup(RelayA, GPIO.OUT, initial=GPIO.LOW)
+
+try:
+    GPIO.setup(RelayA[0], GPIO.OUT, initial=GPIO.LOW)
+except:
+    try:
+        GPIO.setup(RelayA[1], GPIO.OUT, initial=GPIO.LOW)
+    except:
+        GPIO.setup(RelayA[2], GPIO.OUT, initial=GPIO.LOW)
 
 
 class mytkinter(tk.Tk):
@@ -34,11 +41,13 @@ class mytkinter(tk.Tk):
     def setupUi(self):
         self.config(bg='#666888', bd=0)
         self.title("YOLOv8 检测")
-        self.attributes('-fullscreen',True)
+        # self.attributes('-fullscreen',True)
         self.bind('<F11>',self.toggle_fullscreen)
 
         screen_width = self.winfo_screenwidth()  # 电脑屏幕宽度
         screen_height = self.winfo_screenheight()
+        self.width=screen_width
+        self.height=screen_height
         print(screen_width, screen_height)
         center_geometry = [int(screen_width / 2 - self.width / 2), int(screen_height / 2 - self.height / 2)]
         geometry_str = "{}x{}+{}+{}".format(self.width, self.height, center_geometry[0], center_geometry[1])
@@ -50,25 +59,24 @@ class mytkinter(tk.Tk):
         self.load_config()
 
         # 画布
-        self.cv = tk.Canvas(self, bg='snow')
+        self.cv = tk.Canvas(self, bg='white')
 
         # self.style_1=ttk.Style()
         # self.style_1.configure("TLabel",foreground='black',background='ivory')
         self.tab_main = ttk.Notebook(self.cv)
         # self.tab_main.pack(expand=1,fill='both')#这段代码很重要
 
-        self.tab3 = tk.Frame(self.tab_main, bg='#eeebbb')
+        self.tab3 = tk.Frame(self.tab_main, bg='white')
         self.tab3.place(relx=0.05, rely=0.1, relwidth=0.8, relheight=0.8)
         self.tab_main.add(self.tab3, text='摄像头检测')
 
-        self.tab1 = tk.Frame(self.tab_main, bg='snow')
+        self.tab1 = tk.Frame(self.tab_main, bg='white')
         self.tab1.place(relx=0.05, rely=0.1, relwidth=0.9, relheight=0.9)
         self.tab_main.add(self.tab1, text='图像检测')
 
-        self.tab2 = tk.Frame(self.tab_main, bg='ivory')
+        self.tab2 = tk.Frame(self.tab_main, bg='white')
         self.tab2.place(relx=0.05, rely=0.1, relwidth=0.9, relheight=0.9)
         self.tab_main.add(self.tab2, text='视频检测')
-
 
 
         self.tab4 = tk.Frame(self.tab_main, bg='#666888')
@@ -139,6 +147,7 @@ class mytkinter(tk.Tk):
 
         #启用摄像头获取
         self.vid = cv2.VideoCapture(int(self.var6.get()))
+        # self.vid = cv2.VideoCapture(1)
 
         #load model
         self.load_model()
@@ -299,5 +308,12 @@ class mytkinter(tk.Tk):
     def __del__(self):
         if self.vid.isOpened():
             self.vid.release()
-        GPIO.output(RelayA, GPIO.LOW)
+        try:
+            GPIO.output(RelayA[0], GPIO.LOW)
+        except:
+            try:
+                GPIO.output(RelayA[1], GPIO.LOW)
+            except:
+                GPIO.output(RelayA[2], GPIO.LOW)
+
         self.destroy()
