@@ -62,6 +62,18 @@ sudo ldconfig
 ```
 
 # ---   Install torch & torchvision & yolov8 & etc.
+https://docs.ultralytics.com/guides/nvidia-jetson/#install-ultralytics-package_1
+
+Uninstall currently installed PyTorch and Torchvision
+```bash
+pip uninstall torch torchvision
+```
+Install torch 2.1.0 and torchvision 0.16.2 according to JP5.1.2
+```bash
+pip install https://github.com/ultralytics/assets/releases/download/v0.0.0/torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl
+pip install https://github.com/ultralytics/assets/releases/download/v0.0.0/torchvision-0.16.2+c6f3977-cp38-cp38-linux_aarch64.whl
+```
+
 ## 1. Install torch
 [Download the torch wheel](https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048)
 **torch-1.8.0-cp36-cp36m-linux_aarch64.whl** 
