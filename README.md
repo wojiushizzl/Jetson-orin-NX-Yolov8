@@ -273,6 +273,9 @@ download ........
 
 ```
 
+## *. Install HIK vision MVS  (optional)
+https://www.hikrobotics.com/cn/machinevision/service/download/?module=0
+
 ## *. Install Archiconda instead of miniconda
 reference https://blog.csdn.net/gls_nuaa/article/details/135630629
 
